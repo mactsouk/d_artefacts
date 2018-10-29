@@ -21,6 +21,7 @@ blocks:
           commands:
             - checkout
             - echo $SEMAPHORE_PIPELINE_ARTEFACT_ID
+			- cp v1.go hw.go
             - docker build -t go_hw:v1 .
             - mkdir v1
             - docker save go_hw:v1 -o v1/go_hw.tar
