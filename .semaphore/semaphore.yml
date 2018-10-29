@@ -25,7 +25,7 @@ blocks:
             - mkdir docker_image
             - docker save go_hw:v1 -o docker_image/go_hw.tar
             - ls -l docker_image
-            - cache store SEMAPHORE_PIPELINE_ARTEFACT_ID docker_image
+            - cache store $SEMAPHORE_PIPELINE_ARTEFACT_ID docker_image
 
   - name: Test Docker image
     task:
