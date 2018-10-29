@@ -11,11 +11,11 @@ blocks:
       jobs:
         - name: Restore Docker image from cache
           commands:
-            - echo $SEMAPHORE_PIPELINE_ARTEFACT_0_ID
-            - echo $SEMAPHORE_PIPELINE_ARTEFACT_1_ID
-            - cache restore $SEMAPHORE_PIPELINE_ARTEFACT_0_ID
+            - echo $SEMAPHORE_PIPELINE_0_ARTEFACT_ID
+            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - cache restore $SEMAPHORE_PIPELINE_0_ARTEFACT_ID
             - docker load -i v1/go_hw.tar			
-            - cache restore $SEMAPHORE_PIPELINE_ARTEFACT_1_ID
+            - cache restore $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker load -i v2/go_hw.tar
             - docker images
             - docker run go_hw:v1
