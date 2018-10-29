@@ -1,0 +1,43 @@
+version: v1.0
+name: Reuse Docker Images in S2
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+promotions:
+- name: Staging
+  pipeline_file: p1.yml
+  auto_promote_on:
+    - result: passed
+      branch:
+        - "master"
+
+blocks:
+  - name: Create and Store Docker image
+    task:
+      jobs:
+        - name: Store Docker image in cache
+          commands:
+            - checkout
+            - echo $SEMAPHORE_ARTEFACT_PIPELINE_ID
+            - docker build -t go_hw:v1 .
+            - mkdir docker_image
+            - docker save go_hw:v1 -o docker_image/go_hw.tar
+            - ls -l docker_image
+            - cache store SEMAPHORE_ARTEFACT_PIPELINE_ID docker_image
+
+  - name: Test Docker image
+    task:
+      jobs:
+        - name: restore Docker image from cache
+          commands:
+            - echo $SEMAPHORE_ARTEFACT_PIPELINE_ID
+            - cache restore $SEMAPHORE_ARTEFACT_PIPELINE_ID
+            - ls -l docker_image
+            - docker load -i docker_image/go_hw.tar
+            - docker images
+            - docker run -d -p 8000:80 go_hw:v1
+            - wget localhost:80
+
+
